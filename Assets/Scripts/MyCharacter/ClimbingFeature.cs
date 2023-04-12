@@ -5,6 +5,8 @@ using UnityEngine;
 public class ClimbingFeature : MyFeature
 {
     public bool isClimbing = false;
+    public float climbSmoothness = 0.2f;
+    public float climbSpeed = 5f;
 
     MyCharacterMovement charMov;
 
@@ -13,11 +15,19 @@ public class ClimbingFeature : MyFeature
         charMov = GetComponent<MyCharacterMovement>();
     }
 
+    private void OnDisable()
+    {
+        DeactivateClimbing();
+    }
+
     protected override void Update()
     {
         //base.Update();
         WallClimbing();
     }
+
+    Vector2 currentDir = Vector2.zero;
+    Vector2 currentDirVelocity = Vector2.zero;
 
     void WallClimbing()
     {
@@ -30,14 +40,45 @@ public class ClimbingFeature : MyFeature
         Vector2 targetDir = new Vector2(xMov, yMov);
         targetDir.Normalize();
 
+        currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, climbSmoothness);
 
+        charMov.velocity = (transform.up * currentDir.y + transform.right * currentDir.x) * climbSpeed;
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    void ActivateClimbing()
     {
-        if (hit.collider.tag == "ClimbWall")
+        charMov.canMove = false;
+    }
+
+    void DeactivateClimbing()
+    {
+        charMov.canMove = true;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Enter");
+        if (other.gameObject.tag == "ClimbWall")
         {
             isClimbing = true;
+            ActivateClimbing();
+        }
+        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Exit");
+        if (other.gameObject.tag == "ClimbWall")
+        {
+            isClimbing = false;
+            DeactivateClimbing();
         }
     }
+
+    //private void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    if (hit.collider.CompareTag("ClimbWall"))
+    //        Debug.Log("hit");
+    //}
 }

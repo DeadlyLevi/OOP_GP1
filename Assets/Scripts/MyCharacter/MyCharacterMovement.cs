@@ -5,7 +5,7 @@ using UnityEngine;
 public class MyCharacterMovement : MonoBehaviour
 {
     //private
-    CharacterController cc;
+    public Rigidbody rb;
     float gravity = 9.8f;
     float maxJumps = 2;
 
@@ -15,54 +15,56 @@ public class MyCharacterMovement : MonoBehaviour
     public float walkSmoothness;
     public float jumpForce;
     public AnimationCurve jumpSmoothness;
+
+    public bool canMove;
+    public bool canJump;
     
-    
+    public Vector3 velocity;
+    public bool isGrounded;
+
     private void Awake()
     {
-        cc = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        GroundCheck();
         UpdateMovement();
     }
 
     void UpdateMovement()
     {
-        Move();
-        Jump();
+        if(canMove)
+            Move();
+        if(canJump)
+            Jump();
     }
 
     private void LateUpdate()
     {
-        cc.Move(velocity * Time.deltaTime);
+        rb.velocity = velocity * walkSpeed;
     }
 
     // Velocity Affected by Gravity
     public float velocityY = 0.0f;
     Vector2 currentDir = Vector2.zero;
     Vector2 currentDirVelocity = Vector2.zero;
-    Vector3 velocity;
     private void Move()
     {
-        float xMov = Input.GetAxisRaw(GameConstants.k_AxisNameHorizontal); //Get input response from the external InputManager "GameConstants.cs"
-        float zMov = Input.GetAxisRaw(GameConstants.k_AxisNameVertical);
+        float xMov = Input.GetAxis(GameConstants.k_AxisNameHorizontal); //Get input response from the external InputManager "GameConstants.cs"
+        float zMov = Input.GetAxis(GameConstants.k_AxisNameVertical);
 
-        Vector2 targetDir = new Vector2(zMov, xMov);
-        targetDir.Normalize();
+        Vector3 targetDir = new Vector3(xMov, 0, zMov);
 
-        currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, walkSmoothness);
-
-        velocityY += -gravity * Time.deltaTime;
-
-        velocity = (transform.forward * currentDir.x + transform.right * currentDir.y) * walkSpeed + transform.up * velocityY;
+        velocity = targetDir;
     }
 
     int jumpCount;
     float timeInAir = 0.0f;
     public void Jump()
     {
-        if (cc.isGrounded)
+        if (isGrounded)
         {
             jumpCount = 0;
             velocityY = 0.0f;
@@ -84,18 +86,27 @@ public class MyCharacterMovement : MonoBehaviour
 
     private IEnumerator JumpEvent(float power)
     {
-        cc.slopeLimit = 90.0f;
 
         timeInAir = 0.0f;
         do
         {
             float jumpMult = jumpSmoothness.Evaluate(timeInAir);
-            cc.Move(Vector3.up * jumpMult * (jumpForce * power) * Time.deltaTime); // time * gamemanager.gameSpeed
-            timeInAir += Time.deltaTime; // time * gamemanager.gameSpeed
+            Vector3 velocityY = new Vector3(0, jumpForce * jumpMult, 0);
+            velocity += velocityY; // time * gamemanager.gameSpeed
+            timeInAir += Time.fixedDeltaTime; // time * gamemanager.gameSpeed
             yield return null;
-        } while (!cc.isGrounded);
-
-        cc.slopeLimit = 45.0f;
+        } while (!isGrounded);
     }
 
+    void GroundCheck()
+    {
+        if(Physics.Raycast(transform.position, transform.TransformDirection(-Vector3.up) * 1f, 3f, default))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
 }
