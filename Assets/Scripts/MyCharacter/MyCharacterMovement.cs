@@ -31,13 +31,15 @@ public class MyCharacterMovement : MonoBehaviour
     {
         Move();
         Jump();
-        WallClimbing();
+    }
 
+    private void LateUpdate()
+    {
         cc.Move(velocity * Time.deltaTime);
     }
 
     // Velocity Affected by Gravity
-    float velocityY = 0.0f;
+    public float velocityY = 0.0f;
     Vector2 currentDir = Vector2.zero;
     Vector2 currentDirVelocity = Vector2.zero;
     Vector3 velocity;
@@ -95,30 +97,5 @@ public class MyCharacterMovement : MonoBehaviour
 
         cc.slopeLimit = 45.0f;
     }
-
-    void WallClimbing()
-    {
-        if (!isClimbing) return;
-        velocityY = 0;
-
-        float xMov = Input.GetAxisRaw(GameConstants.k_AxisNameHorizontal); //Get input response from the external InputManager "GameConstants.cs"
-        float yMov = Input.GetAxisRaw(GameConstants.k_AxisNameVertical);
-
-        Vector2 targetDir = new Vector2(xMov, yMov);
-        targetDir.Normalize();
-
-        
-    }
-
-    public bool isClimbing = false;
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if(hit.collider.tag == "ClimbWall")
-        {
-            isClimbing = true;
-        }
-    }
-
-    
 
 }
