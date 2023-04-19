@@ -55,7 +55,7 @@ public class ClimbingFeature : MyFeature
         charMov.canMove = true;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         Debug.Log("Enter");
         if (other.gameObject.tag == "ClimbWall")

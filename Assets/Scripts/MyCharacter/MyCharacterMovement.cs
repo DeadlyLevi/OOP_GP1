@@ -110,3 +110,128 @@ public class MyCharacterMovement : MonoBehaviour
         }
     }
 }
+
+/*
+ using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public CharacterController controller;
+
+    public float speed = 6f;
+
+    Vector3 FallVelocity;
+    public float JumpForce;
+
+    public float gravity = -7.5f;
+
+    public int saltiADisposizione = 2;
+
+    public bool gravityWall;
+
+    public bool controllerWall;
+    // Start is called before the first frame update
+    void Start()
+    {
+        gravityWall = true;
+        controllerWall = true;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+        if(controllerWall == true)
+        {
+
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+            //float jump = Input.GetAxisRaw("Jump");
+            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+                 if (direction.magnitude >= 0.1f)
+             {
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+                }
+
+            controller.Move(direction * speed * Time.deltaTime);
+        }
+            if(controllerWall == false)
+        {
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+            //float jump = Input.GetAxisRaw("Jump");
+            Vector3 direction = new Vector3(horizontal, vertical, 0f).normalized;
+
+            if (direction.magnitude >= 0.1f)
+            {
+                float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+            }
+
+            controller.Move(direction * speed * Time.deltaTime);
+        }
+        
+        
+        Jump();
+        Gravity();
+        
+    }
+
+    private void Jump()
+    {
+        //GroundCheck
+        
+
+        //Jump
+        if (Input.GetButtonDown("Jump") && saltiADisposizione != 0)
+        {
+            saltiADisposizione--;
+            Debug.Log("I Belive I Can Fly");
+            FallVelocity.y = JumpForce;
+            
+        }
+        
+    }
+    private void Gravity()
+    {
+        if(gravityWall == true )
+        {
+        FallVelocity.y += gravity * Time.deltaTime;
+        controller.Move(FallVelocity * Time.deltaTime);
+
+        }
+        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Plane"))
+        {
+            saltiADisposizione = 2;
+        }
+
+        if(other.CompareTag("Wall"))
+        {
+            gravityWall = false;
+            controllerWall = false;
+            saltiADisposizione = 2;
+        }
+
+        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag("Wall"))
+        {
+            gravityWall = true;
+            controllerWall = true;
+        }
+    }
+}
+
+ */
