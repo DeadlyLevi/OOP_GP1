@@ -9,13 +9,26 @@ public class MyCharacterMovement : MonoBehaviour
     float fallSpeed;
 
     //public 
-    public float speed = 6f;
-    public float JumpForce;
+    [Header("Camera")]
+    public Transform cameraSocket;
+    public float cameraSensivityX;
+    public float cameraSensivityY;
+    public float minYAngle = 20f;
+    public float maxYAngle = 80f;
+
+    [Header("Settings")]
+    public float movementSpeed = 6f;
+    public float jumpForce = 5f;
     public float gravity = 9.8f;
     public int maxJumps = 2;
 
+
+    bool _orientObjectToCamera = true;
+    public bool orientObjectToCamera { get { return _orientObjectToCamera; } set { _orientObjectToCamera = value; } }
+    
     bool _canMove = true;
     public bool canMove { get { return _canMove; } set { _canMove = value; } }
+
     bool _canJump = true;
     public bool canJump { get { return _canJump; } set { _canJump = value; } }
 
@@ -41,6 +54,12 @@ public class MyCharacterMovement : MonoBehaviour
             Jump();
         if(gravityEnabled)
             Gravity();
+
+        Camera();
+        if(_orientObjectToCamera)
+        {
+            OrientCharacterToCamera();
+        }
     }
 
     private void Move()
@@ -50,13 +69,9 @@ public class MyCharacterMovement : MonoBehaviour
 
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        //if (direction.magnitude >= 0.1f)
-        //{
-        //    float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        //    transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
-        //}
+        direction = direction.x * transform.right + direction.z * transform.forward;
 
-        cc.Move(direction * speed * Time.deltaTime);
+        cc.Move(direction * movementSpeed * Time.deltaTime);
     }
 
     int jumpCount;
@@ -72,7 +87,7 @@ public class MyCharacterMovement : MonoBehaviour
             if(Input.GetButtonDown("Jump"))
             {
                 jumpCount++;
-                fallSpeed = JumpForce;
+                fallSpeed = jumpForce;
             }
             
         }
@@ -83,5 +98,25 @@ public class MyCharacterMovement : MonoBehaviour
     {
         fallSpeed += -gravity * Time.deltaTime;
         cc.Move(fallSpeed * Time.deltaTime * transform.up);
+    }
+
+    Vector2 currRotation;
+    private void Camera()
+    {
+        float mouseX = Input.GetAxisRaw(GameConstants.k_MouseAxisNameVertical);
+        float mouseY = Input.GetAxisRaw(GameConstants.k_MouseAxisNameHorizontal);
+
+        currRotation.x -= mouseX * cameraSensivityX;
+        currRotation.y += mouseY * cameraSensivityY;
+
+        currRotation.y = Mathf.Repeat(currRotation.y, 360);
+        currRotation.x = Mathf.Clamp(currRotation.x, -minYAngle, maxYAngle);
+
+        cameraSocket.transform.rotation = Quaternion.Euler(currRotation.x, currRotation.y, 0);
+    }
+
+    void OrientCharacterToCamera()
+    {
+        transform.rotation = Quaternion.Euler(0, currRotation.y, 0);
     }
 }

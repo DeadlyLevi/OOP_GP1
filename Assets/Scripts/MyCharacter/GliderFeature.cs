@@ -80,6 +80,7 @@ public class GliderFeature : MyFeature
         charMov.canMove = false;
         charMov.jumpPass = false;
         charMov.gravityEnabled = false;
+        charMov.orientObjectToCamera = false;
     }
 
     void DeactivateGlider()
@@ -90,6 +91,7 @@ public class GliderFeature : MyFeature
         charMov.canMove = true;
         charMov.jumpPass = true;
         charMov.gravityEnabled = true;
+        charMov.orientObjectToCamera = true;
     }
 
 }

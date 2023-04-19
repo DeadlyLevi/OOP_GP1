@@ -68,7 +68,7 @@ public class ClimbingFeature : MyFeature
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
-        if (other.CompareTag("ClimbWall"))
+        if (other.CompareTag("ClimbWall") && !charMov.cc.isGrounded)
         {
             isClimbing = true;
             ActivateClimbing();
