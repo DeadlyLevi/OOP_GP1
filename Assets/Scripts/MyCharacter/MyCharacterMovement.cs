@@ -6,23 +6,24 @@ public class MyCharacterMovement : MonoBehaviour
 {
     //private
     public CharacterController cc;
-    Vector3 FallVelocity;
+    float fallSpeed;
 
     //public 
     public float speed = 6f;
     public float JumpForce;
     public float gravity = 9.8f;
     public int maxJumps = 2;
-    public bool gravityEnabled = true;
 
     bool _canMove = true;
     public bool canMove { get { return _canMove; } set { _canMove = value; } }
-
     bool _canJump = true;
     public bool canJump { get { return _canJump; } set { _canJump = value; } }
 
     bool _jumpPass = false;
     public bool jumpPass { get { return _jumpPass; } set { _jumpPass = value; } }
+
+    bool _gravityEnabled = true;
+    public bool gravityEnabled { get { return _gravityEnabled; } set { _gravityEnabled = value; } }
 
 
     // Start is called before the first frame update
@@ -38,14 +39,14 @@ public class MyCharacterMovement : MonoBehaviour
             Move();
         if (_canJump)
             Jump();
-
-        Gravity();
+        if(gravityEnabled)
+            Gravity();
     }
 
     private void Move()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        float horizontal = Input.GetAxisRaw(GameConstants.k_AxisNameHorizontal);
+        float vertical = Input.GetAxisRaw(GameConstants.k_AxisNameVertical);
 
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
@@ -71,7 +72,7 @@ public class MyCharacterMovement : MonoBehaviour
             if(Input.GetButtonDown("Jump"))
             {
                 jumpCount++;
-                FallVelocity.y = JumpForce;
+                fallSpeed = JumpForce;
             }
             
         }
@@ -80,11 +81,7 @@ public class MyCharacterMovement : MonoBehaviour
 
     private void Gravity()
     {
-        if(gravityEnabled == true )
-        {
-            FallVelocity.y += -gravity * Time.deltaTime;
-            cc.Move(FallVelocity * Time.deltaTime);
-        }
-        
+        fallSpeed += -gravity * Time.deltaTime;
+        cc.Move(fallSpeed * Time.deltaTime * transform.up);
     }
 }

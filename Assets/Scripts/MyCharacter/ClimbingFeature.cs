@@ -31,8 +31,8 @@ public class ClimbingFeature : MyFeature
     {
         if (isClimbing)
         {
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
+            float horizontal = Input.GetAxisRaw(GameConstants.k_AxisNameHorizontal);
+            float vertical = Input.GetAxisRaw(GameConstants.k_AxisNameVertical);
 
             Vector3 direction = new Vector3(horizontal, vertical, 0f).normalized;
 
