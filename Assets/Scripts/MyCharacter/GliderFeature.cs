@@ -37,7 +37,10 @@ public class GliderFeature : MyFeature
         }
 
         if (charMov.cc.isGrounded)
+        {
             DeactivateGlider();
+            isGliding = false;
+        }
     }
 
     void CanGlide()
