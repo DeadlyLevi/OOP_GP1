@@ -5,12 +5,11 @@ using UnityEngine;
 public class ClimbingFeature : MyFeature
 {
     public bool isClimbing = false;
-    public float climbSmoothness = 0.2f;
     public float climbSpeed = 5f;
 
     MyCharacterMovement charMov;
 
-    private void OnEnable()
+    private void Start()
     {
         charMov = GetComponent<MyCharacterMovement>();
     }
@@ -26,39 +25,50 @@ public class ClimbingFeature : MyFeature
         WallClimbing();
     }
 
-    Vector2 currentDir = Vector2.zero;
-    Vector2 currentDirVelocity = Vector2.zero;
+
 
     void WallClimbing()
     {
-        if (!isClimbing) return;
-        charMov.velocityY = 0;
+        if (isClimbing)
+        {
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
 
-        float xMov = Input.GetAxisRaw(GameConstants.k_AxisNameHorizontal); //Get input response from the external InputManager "GameConstants.cs"
-        float yMov = Input.GetAxisRaw(GameConstants.k_AxisNameVertical);
+            Vector3 direction = new Vector3(horizontal, vertical, 0f).normalized;
 
-        Vector2 targetDir = new Vector2(xMov, yMov);
-        targetDir.Normalize();
+            //if (direction.magnitude >= 0.1f)
+            //{
+            //    float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            //    transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+            //}
 
-        currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, climbSmoothness);
+            charMov.cc.Move(direction * climbSpeed * Time.deltaTime);
+        }
 
-        charMov.velocity = (transform.up * currentDir.y + transform.right * currentDir.x) * climbSpeed;
     }
 
     void ActivateClimbing()
     {
+        if (charMov == null)
+            return;
         charMov.canMove = false;
+        charMov.jumpPass = true;
+        charMov.gravityEnabled = false;
     }
 
     void DeactivateClimbing()
     {
+        if (charMov == null)
+            return;
         charMov.canMove = true;
+        charMov.jumpPass = false;
+        charMov.gravityEnabled = true;
     }
 
     protected override void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Enter");
-        if (other.gameObject.tag == "ClimbWall")
+        base.OnTriggerEnter(other);
+        if (other.CompareTag("ClimbWall"))
         {
             isClimbing = true;
             ActivateClimbing();
@@ -66,19 +76,13 @@ public class ClimbingFeature : MyFeature
         
     }
 
-    private void OnTriggerExit(Collider other)
+    protected override void OnTriggerExit(Collider other)
     {
-        Debug.Log("Exit");
-        if (other.gameObject.tag == "ClimbWall")
+        base.OnTriggerExit(other);
+        if (other.CompareTag("ClimbWall"))
         {
             isClimbing = false;
             DeactivateClimbing();
         }
     }
-
-    //private void OnControllerColliderHit(ControllerColliderHit hit)
-    //{
-    //    if (hit.collider.CompareTag("ClimbWall"))
-    //        Debug.Log("hit");
-    //}
 }

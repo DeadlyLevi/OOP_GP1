@@ -33,4 +33,9 @@ public class MyFeature : MonoBehaviour
                 gameObject.SetActive(false);
         }
     }
+
+    protected virtual void OnTriggerExit(Collider other)
+    {
+
+    }
 }
