@@ -20,9 +20,16 @@ public class GliderFeature : MyFeature
         charMov = GetComponent<MyCharacterMovement>();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         DeactivateGlider();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        ActivateGlider();
     }
 
     protected override void Update()

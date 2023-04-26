@@ -7,6 +7,18 @@ public class MyFeature : MonoBehaviour
     [Header("Settings")]
     public MyFeature feature;
     public bool SetFalseWhenPicked;
+    public bool isUsed;
+
+
+    protected virtual void OnEnable()
+    {
+        
+    }
+
+    protected virtual void OnDisable()
+    {
+
+    }
 
     protected virtual void Update()
     {
@@ -18,16 +30,7 @@ public class MyFeature : MonoBehaviour
         //Attach Component of type feature
         if (other.CompareTag("Player"))
         {
-            Component componentRef = other.GetComponent(feature.GetType());
-
-            if (componentRef == null)
-            {
-                other.gameObject.AddComponent(feature.GetType());
-            }
-            else if (componentRef.gameObject.activeSelf == false)
-            {
-                other.GetComponent(feature.GetType()).gameObject.SetActive(true);
-            }
+            FeatureManager.Instance.AddFeature(feature);
 
             if (SetFalseWhenPicked)
                 gameObject.SetActive(false);
