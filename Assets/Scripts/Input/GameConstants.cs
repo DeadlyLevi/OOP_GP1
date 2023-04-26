@@ -10,6 +10,9 @@ public class GameConstants
     public const string k_ButtonNameActivate = "Activate";
     public const string k_ButtonNameSprint = "Sprint";
     public const string k_ButtonNameCrouch = "Crouch";
+    public const string k_ButtonA1 = "Ability1";
+    public const string k_ButtonA2 = "Ability2";
+    public const string k_ButtonA3 = "Ability3";
 
     public const string k_ButtonNamePauseMenu = "Pause Menu";
 

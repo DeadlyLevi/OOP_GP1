@@ -6,7 +6,19 @@ public class MyFeature : MonoBehaviour
 {
     [Header("Settings")]
     public MyFeature feature;
-    public bool SetFalseWhenPicked;
+    public bool disableGameObjectWhenPicked;
+    public bool setFeatureActiveWhenPicked;
+
+    private void Start()
+    {
+        FeatureManager fm;
+        TryGetComponent<FeatureManager>(out fm);
+        
+        if(fm)
+        {
+            fm.featureList.Add(this);
+        }
+    }
 
     protected virtual void Update()
     {
@@ -29,7 +41,7 @@ public class MyFeature : MonoBehaviour
                 other.GetComponent(feature.GetType()).gameObject.SetActive(true);
             }
 
-            if (SetFalseWhenPicked)
+            if (disableGameObjectWhenPicked)
                 gameObject.SetActive(false);
         }
     }
