@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class MyFeature : MonoBehaviour
 {
     [Header("Settings")]
@@ -11,8 +12,8 @@ public class MyFeature : MonoBehaviour
 
 
     protected virtual void OnEnable()
-    {
-        
+    { 
+
     }
 
     protected virtual void OnDisable()

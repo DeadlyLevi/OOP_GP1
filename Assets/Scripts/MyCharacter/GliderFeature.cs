@@ -9,9 +9,9 @@ public class GliderFeature : MyFeature
     float velocityY;
 
     //public 
-    public float gliderSpeed = 5;
-    public float rotationRate = 3;
-    public float fallingSpeed = 50;
+    public float gliderSpeed;// = 5;
+    public float rotationRate;// = 3;
+    public float fallingSpeed;// = 50;
 
     MyCharacterMovement charMov;
 

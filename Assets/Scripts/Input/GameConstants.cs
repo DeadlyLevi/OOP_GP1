@@ -13,6 +13,7 @@ public class GameConstants
     public const string k_ButtonA1 = "Ability1";
     public const string k_ButtonA2 = "Ability2";
     public const string k_ButtonA3 = "Ability3";
+    public const string k_ChangeView = "ChangeView";
 
     public const string k_ButtonNamePauseMenu = "Pause Menu";
 

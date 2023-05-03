@@ -8,7 +8,7 @@ public class FeatureManager : MonoBehaviour
     private static FeatureManager instance;
     public static FeatureManager Instance { get => instance; private set => instance = value; }
 
-    private List<MyFeature> features;
+    public List<MyFeature> features;
     private MyFeature currentFeature;
 
     [SerializeField] private GameObject player;

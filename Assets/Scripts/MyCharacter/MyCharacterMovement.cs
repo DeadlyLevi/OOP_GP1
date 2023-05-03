@@ -7,14 +7,10 @@ public class MyCharacterMovement : MonoBehaviour
     //private
     public CharacterController cc;
     float fallSpeed;
+    [SerializeField] private GameObject mainCamera;
+    [SerializeField] private GameObject[] _vCams = new GameObject[2];
 
-    //public 
-    [Header("Camera")]
-    public Transform cameraSocket;
-    public float cameraSensivityX;
-    public float cameraSensivityY;
-    public float minYAngle = 20f;
-    public float maxYAngle = 80f;
+    int cci; // CurrentCameraIndex
 
     [Header("Settings")]
     public float movementSpeed = 6f;
@@ -43,6 +39,7 @@ public class MyCharacterMovement : MonoBehaviour
     void Awake()
     {
         cc = GetComponent<CharacterController>();
+        SetVCamActiveAtIndex(0);
     }
 
     // Update is called once per frame
@@ -55,11 +52,12 @@ public class MyCharacterMovement : MonoBehaviour
         if(gravityEnabled)
             Gravity();
 
-        Camera();
         if(_orientObjectToCamera)
         {
             OrientCharacterToCamera();
         }
+
+        CycleCameras();
     }
 
     private void Move()
@@ -100,23 +98,37 @@ public class MyCharacterMovement : MonoBehaviour
         cc.Move(fallSpeed * Time.deltaTime * transform.up);
     }
 
-    Vector2 currRotation;
-    private void Camera()
-    {
-        float mouseX = Input.GetAxisRaw(GameConstants.k_MouseAxisNameVertical);
-        float mouseY = Input.GetAxisRaw(GameConstants.k_MouseAxisNameHorizontal);
-
-        currRotation.x -= mouseX * cameraSensivityX;
-        currRotation.y += mouseY * cameraSensivityY;
-
-        currRotation.y = Mathf.Repeat(currRotation.y, 360);
-        currRotation.x = Mathf.Clamp(currRotation.x, -minYAngle, maxYAngle);
-
-        cameraSocket.transform.rotation = Quaternion.Euler(currRotation.x, currRotation.y, 0);
-    }
-
     void OrientCharacterToCamera()
     {
-        transform.rotation = Quaternion.Euler(0, currRotation.y, 0);
+        transform.rotation = Quaternion.Euler(0, mainCamera.transform.rotation.eulerAngles.y, 0);
+    }
+
+    void CycleCameras()
+    {
+        if(Input.GetButtonDown(GameConstants.k_ChangeView))
+        {
+            if(cci >= _vCams.Length - 1)
+            {
+                cci = 0;
+            }
+            else
+            {
+                cci++;
+            }
+            SetVCamActiveAtIndex(cci);
+        }
+    }
+
+    void SetVCamActiveAtIndex(int index)
+    {
+        for (int i = 0; i < _vCams.Length; i++)
+        {
+            if(i != index)
+            {
+                _vCams[i].SetActive(false);
+            }
+        }
+        cci = index;
+        _vCams[cci].SetActive(true);
     }
 }
