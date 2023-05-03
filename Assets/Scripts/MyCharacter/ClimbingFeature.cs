@@ -20,12 +20,6 @@ public class ClimbingFeature : MyFeature
         DeactivateClimbing();
     }
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        ActivateClimbing();
-    }
-
     protected override void Update()
     {
         //base.Update();
