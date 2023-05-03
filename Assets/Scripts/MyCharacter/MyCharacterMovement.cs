@@ -8,13 +8,15 @@ public class MyCharacterMovement : MonoBehaviour
     public CharacterController cc;
     float fallSpeed;
 
-    //public 
-    [Header("Camera")]
-    public Transform cameraSocket;
-    public float cameraSensivityX;
-    public float cameraSensivityY;
-    public float minYAngle = 20f;
-    public float maxYAngle = 80f;
+    [SerializeField] private GameObject[] _vCams = new GameObject[2];
+    int currCameraIndex;
+    [SerializeField] private GameObject mainCamera;
+    //[Header("Camera")]
+    //public Transform cameraSocket;
+    //public float cameraSensivityX;
+    //public float cameraSensivityY;
+    //public float minYAngle = 20f;
+    //public float maxYAngle = 80f;
 
     [Header("Settings")]
     public float movementSpeed = 6f;
@@ -25,7 +27,7 @@ public class MyCharacterMovement : MonoBehaviour
 
     bool _orientObjectToCamera = true;
     public bool orientObjectToCamera { get { return _orientObjectToCamera; } set { _orientObjectToCamera = value; } }
-    
+
     bool _canMove = true;
     public bool canMove { get { return _canMove; } set { _canMove = value; } }
 
@@ -43,25 +45,26 @@ public class MyCharacterMovement : MonoBehaviour
     void Awake()
     {
         cc = GetComponent<CharacterController>();
+        SetVCamActiveAtIndex(0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(_canMove)
+        if (_canMove)
             Move();
         if (_canJump)
             Jump();
-        if(gravityEnabled)
+        if (gravityEnabled)
             Gravity();
 
-        Camera();
-        if(_orientObjectToCamera)
+        //Camera();
+        if (_orientObjectToCamera)
         {
             OrientCharacterToCamera();
         }
+        CycleCameras();
     }
-
     private void Move()
     {
         float horizontal = Input.GetAxisRaw(GameConstants.k_AxisNameHorizontal);
@@ -77,21 +80,21 @@ public class MyCharacterMovement : MonoBehaviour
     int jumpCount;
     private void Jump()
     {
-        if(cc.isGrounded || _jumpPass)
+        if (cc.isGrounded || _jumpPass)
         {
             jumpCount = 0;
         }
-        
+
         if (jumpCount < maxJumps)
         {
-            if(Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
                 jumpCount++;
                 fallSpeed = jumpForce;
             }
-            
+
         }
-        
+
     }
 
     private void Gravity()
@@ -100,23 +103,51 @@ public class MyCharacterMovement : MonoBehaviour
         cc.Move(fallSpeed * Time.deltaTime * transform.up);
     }
 
-    Vector2 currRotation;
-    private void Camera()
-    {
-        float mouseX = Input.GetAxisRaw(GameConstants.k_MouseAxisNameVertical);
-        float mouseY = Input.GetAxisRaw(GameConstants.k_MouseAxisNameHorizontal);
+    //Vector2 currRotation;
+    //private void Camera()
+    //{
+    //    float mouseX = Input.GetAxisRaw(GameConstants.k_MouseAxisNameVertical);
+    //    float mouseY = Input.GetAxisRaw(GameConstants.k_MouseAxisNameHorizontal);
 
-        currRotation.x -= mouseX * cameraSensivityX;
-        currRotation.y += mouseY * cameraSensivityY;
+    //    currRotation.x -= mouseX * cameraSensivityX;
+    //    currRotation.y += mouseY * cameraSensivityY;
 
-        currRotation.y = Mathf.Repeat(currRotation.y, 360);
-        currRotation.x = Mathf.Clamp(currRotation.x, -minYAngle, maxYAngle);
+    //    currRotation.y = Mathf.Repeat(currRotation.y, 360);
+    //    currRotation.x = Mathf.Clamp(currRotation.x, -minYAngle, maxYAngle);
 
-        cameraSocket.transform.rotation = Quaternion.Euler(currRotation.x, currRotation.y, 0);
-    }
+    //    cameraSocket.transform.rotation = Quaternion.Euler(currRotation.x, currRotation.y, 0);
+    //}
 
     void OrientCharacterToCamera()
     {
-        transform.rotation = Quaternion.Euler(0, currRotation.y, 0);
+        transform.rotation = Quaternion.Euler(0, mainCamera.transform.rotation.eulerAngles.y, 0);
+    }
+    void CycleCameras()
+    {
+        if (Input.GetButtonDown("ChangeView"))
+        {
+
+            if (currCameraIndex >= _vCams.Length - 1)
+            {
+                currCameraIndex = 0;
+            }
+            else
+            {
+                currCameraIndex++;
+            }
+            SetVCamActiveAtIndex(currCameraIndex);
+        }
+    }
+    void SetVCamActiveAtIndex(int index)
+    {
+        for (int i = 0; i < _vCams.Length; i++)
+        {
+            if (i != index)
+            {
+                _vCams[i].SetActive(false);
+            }
+        }
+        currCameraIndex = index;
+        _vCams[currCameraIndex].SetActive(true);
     }
 }
