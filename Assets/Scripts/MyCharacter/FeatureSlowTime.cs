@@ -14,6 +14,11 @@ public class FeatureSlowTime : MyFeature
     bool bIsEnabled = false;
     bool isLerping = false;
 
+    private void OnEnable()
+    {
+        name = "SlowTime";
+    }
+
     private void Awake()
     {
         defaultTime = Time.timeScale;
@@ -21,8 +26,6 @@ public class FeatureSlowTime : MyFeature
 
     protected override void Update()
     {
-
-        Debug.Log(Time.timeScale);
         if (Input.GetButtonDown(GameConstants.k_ButtonNameActivate))
         {
             bIsEnabled = !bIsEnabled;

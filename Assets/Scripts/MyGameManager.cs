@@ -7,7 +7,9 @@ public class MyGameManager : MonoBehaviour
     static MyGameManager _instance;
     public static MyGameManager Instance { get { return _instance; } }
 
+
     public float defaultTimeScale;
+    public GameObject charRef;
 
     void Awake()
     {

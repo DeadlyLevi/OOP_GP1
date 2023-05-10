@@ -8,62 +8,107 @@ public class FeatureManager : MonoBehaviour
     private static FeatureManager instance;
     public static FeatureManager Instance { get => instance; private set => instance = value; }
 
-    public List<MyFeature> features;
-    private MyFeature currentFeature;
+    public List<MyFeature> allMyFeatures;
+    private int currentFeatureIndex;
 
-    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject characterRef;
 
     private void Awake()
     {
         instance = this;
-        features = new List<MyFeature>();
+        allMyFeatures = new List<MyFeature>();
+    }
+
+    public void Start()
+    {
+        characterRef = FindObjectOfType<MyCharacterMovement>().gameObject;
     }
 
     public void AddFeature(MyFeature feature)
     {
-        Component componentRef = player.GetComponent(feature.GetType());
+        Component componentRef = characterRef.GetComponent(feature.GetType());
 
         if (componentRef == null)
         {
-            MyFeature script = player.gameObject.AddComponent(feature.GetType()) as MyFeature;
+            MyFeature script = characterRef.gameObject.AddComponent(feature.GetType()) as MyFeature;
             script.enabled = false;
-            features.Add(script);
+            allMyFeatures.Add(script);
+            if(allMyFeatures.Count == 0)
+            {
+                currentFeatureIndex = 0;
+            }
         }
         else if (componentRef.gameObject.activeSelf == false)
         {
-            player.GetComponent(feature.GetType()).gameObject.SetActive(true);
+            characterRef.GetComponent(feature.GetType()).gameObject.SetActive(true);
         }
     }
 
     private void Update()
     {
-        int numberPressed = GetPressedNumber();
-
-        if (numberPressed == -1) return;
-
-        numberPressed--;
-
-        if(numberPressed >= features.Count) return;
-
-        if (currentFeature)
-        {
-            currentFeature.enabled = false;
-        }
-
-        MyFeature featureSelected = features[numberPressed];
-        featureSelected.enabled = true;
-
-        currentFeature = featureSelected;
+        InputFeatureChange();
     }
 
-    private int GetPressedNumber()
+    bool hasInput = false;
+    void InputFeatureChange()
     {
-        for (int number = 1; number <= 3; number++)
+        float v = Input.GetAxis(GameConstants.k_MouseScrollWheel);
+        if(v > 0)
         {
-            if (Input.GetKeyDown(number.ToString()))
-                return number;
+            SelectFeature(1);
+            hasInput = true;
+        }
+        else if(v < 0)
+        {
+            SelectFeature(-1);
+            hasInput = true;
         }
 
-        return -1;
+        if(v != 0 && hasInput)
+        {
+            UpdateFeatures();
+            hasInput = false;
+        }
+    }
+
+    void SelectFeature(int x)
+    {
+        if(currentFeatureIndex + x > allMyFeatures.Count - 1)
+        {
+            currentFeatureIndex = 0;
+        }
+        else if(currentFeatureIndex + x < 0)
+        {
+            currentFeatureIndex = allMyFeatures.Count - 1;
+        }
+        else
+        {
+            currentFeatureIndex += x;
+        }
+    }
+
+    void UpdateFeatures()
+    {
+        for(int i = 0; i <= allMyFeatures.Count - 1; i++)
+        {
+            if(i == currentFeatureIndex)
+            {
+                allMyFeatures[i].enabled = true;
+            }
+            else
+            {
+                allMyFeatures[i].enabled = false;
+            }
+        }
+    }
+
+    public string GetSelectedFeatureName()
+    {
+        if(allMyFeatures.Count > 0)
+        {
+            return allMyFeatures[currentFeatureIndex].name;
+        }
+        return null;
     }
 }
+

@@ -7,13 +7,14 @@ public class MyFeature : MonoBehaviour
 {
     [Header("Settings")]
     public MyFeature feature;
+    public string featureName;
     public bool SetFalseWhenPicked;
     public bool isUsed;
 
 
     protected virtual void OnEnable()
-    { 
-
+    {
+        featureName = GetType().Name;
     }
 
     protected virtual void OnDisable()

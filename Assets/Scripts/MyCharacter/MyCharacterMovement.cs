@@ -38,6 +38,7 @@ public class MyCharacterMovement : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        MyGameManager.Instance.charRef = this.gameObject;
         cc = GetComponent<CharacterController>();
         SetVCamActiveAtIndex(0);
     }

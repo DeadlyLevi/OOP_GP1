@@ -14,6 +14,11 @@ public class ClimbingFeature : MyFeature
         charMov = GetComponent<MyCharacterMovement>();
     }
 
+    private void OnEnable()
+    {
+        name = "Climbing";    
+    }
+
     protected override void OnDisable()
     {
         base.OnDisable();

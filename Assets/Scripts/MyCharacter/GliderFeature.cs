@@ -28,6 +28,7 @@ public class GliderFeature : MyFeature
 
     protected override void OnEnable()
     {
+        name = "Glider";
         base.OnEnable();
         ActivateGlider();
     }
