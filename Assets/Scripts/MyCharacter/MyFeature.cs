@@ -11,7 +11,6 @@ public class MyFeature : MonoBehaviour
     public bool SetFalseWhenPicked;
     public bool isUsed;
 
-
     protected virtual void OnEnable()
     {
         featureName = GetType().Name;
