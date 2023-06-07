@@ -5,10 +5,10 @@ using UnityEngine.UI;
 using UnityEngine;
 
 
-public class FeatureCanvasManager : MonoBehaviour
+public class FCanvasManager : MonoBehaviour
 {
-    private static FeatureCanvasManager _instance;
-    public static FeatureCanvasManager Instance { get => _instance; private set => _instance = value; }
+    private static FCanvasManager _instance;
+    public static FCanvasManager Instance { get => _instance; private set => _instance = value; }
 
     public Text selectedFeature;
 
@@ -34,7 +34,7 @@ public class FeatureCanvasManager : MonoBehaviour
 
     private void Update()
     {
-        selectedFeature.text = FeatureManager.Instance.GetSelectedFeatureName();
+        selectedFeature.text = FManager.Instance.GetSelectedFeatureName();
         HandleFMenuCanvas();
 
         if(bCanvasIsOpen)
@@ -87,43 +87,43 @@ public class FeatureCanvasManager : MonoBehaviour
     spriteFeatureInfo secondHitSprite;
     void HandleFSelection()
     {
-        Vector3 mousePos = Input.mousePosition / allFCanvasRef.GetComponent<Canvas>().scaleFactor;
-        mousePos.z = mousePos.z - 500;
+        //Vector3 mousePos = Input.mousePosition / allFCanvasRef.GetComponent<Canvas>().scaleFactor;
+        //mousePos.z = mousePos.z - 500;
 
-        Debug.DrawLine(mousePos, mousePos + Vector3.forward * 1000f, Color.red);
+        //Debug.DrawLine(mousePos, mousePos + Vector3.forward * 1000f, Color.red);
 
-        Debug.Log("Im Here");
-        if (Input.GetMouseButtonDown(0))
-        {
-            firstHitSprite = null;
-            secondHitSprite = null;
-            if (Physics.Raycast(mousePos, mousePos + Vector3.forward, out hit, 1000f, layer))
-            {
-                Debug.Log("FirstHit");
-                firstHitSprite = hit.transform.GetComponent<spriteFeatureInfo>();
-            }
-        }
+        
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    firstHitSprite = null;
+        //    secondHitSprite = null;
+        //    if (Physics.Raycast(mousePos, mousePos + Vector3.forward, out hit, 1000f, layer))
+        //    {
+                
+        //        firstHitSprite = hit.transform.GetComponent<spriteFeatureInfo>();
+        //    }
+        //}
 
-        if (Input.GetMouseButtonUp(0) && firstHitSprite != null)
-        {
-            if (Physics.Raycast(mousePos, mousePos + Vector3.forward, out hit, 1000f, layer))
-            {
-                Debug.Log("SecondHit");
-                secondHitSprite = hit.transform.GetComponent<spriteFeatureInfo>();
-                if (firstHitSprite.isInInventory && secondHitSprite.isInInventory)
-                {
-                    SwapSprites();
-                }
-                else if(!firstHitSprite.isInInventory && secondHitSprite.isInInventory)
-                {
-                    EquipSprite();
-                }
-            }
-            else if(firstHitSprite.isInInventory)
-            {
-                EmptySprite();
-            }
-        }
+        //if (Input.GetMouseButtonUp(0) && firstHitSprite != null)
+        //{
+        //    if (Physics.Raycast(mousePos, mousePos + Vector3.forward, out hit, 1000f, layer))
+        //    {
+        //        Debug.Log("SecondHit");
+        //        secondHitSprite = hit.transform.GetComponent<spriteFeatureInfo>();
+        //        if (firstHitSprite.isInInventory && secondHitSprite.isInInventory)
+        //        {
+        //            SwapSprites();
+        //        }
+        //        else if(!firstHitSprite.isInInventory && secondHitSprite.isInInventory)
+        //        {
+        //            EquipSprite();
+        //        }
+        //    }
+        //    else if(firstHitSprite.isInInventory)
+        //    {
+        //        EmptySprite();
+        //    }
+        //}
     }
 
     void SwapSprites()

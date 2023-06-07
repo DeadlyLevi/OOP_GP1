@@ -2,26 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FeatureSlowTime : MyFeature
+public class SlowtimeF : MyFeature
 {
-    public float slowedTime = 0.5f;
-    float defaultTime = 1f;
 
-    public float targetTimeScale;
-
+    public float slowedTime;
     public float step = 0.02f;
 
+
+
+    float targetTimeScale;
+    float defaultTime;
     bool bIsEnabled = false;
     bool isLerping = false;
 
-    private void OnEnable()
+    SlowTimeFSO SO;
+    protected override void OnEnable()
     {
-        name = "SlowTime";
+        base.OnEnable();
     }
 
     private void Awake()
     {
         defaultTime = Time.timeScale;
+    }
+
+    private void Start()
+    {
+        SO = featureSO as SlowTimeFSO;
+        slowedTime = SO.slowedTime;
+        step = SO.step;
+        targetTimeScale = slowedTime;
     }
 
     protected override void Update()

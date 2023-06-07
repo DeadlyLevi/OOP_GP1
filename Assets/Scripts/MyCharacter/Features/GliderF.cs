@@ -2,22 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GliderFeature : MyFeature
+public class GliderF : MyFeature
 {
     //private
     bool isGliding;
     float velocityY;
 
     //public 
-    public float gliderSpeed;// = 5;
-    public float rotationRate;// = 3;
-    public float fallingSpeed;// = 50;
+    public float gliderSpeed;
+    public float rotationRate;
+    public float fallingSpeed;
 
     MyCharacterMovement charMov;
 
+    GliderFSO SO;
     private void Start()
     {
         charMov = GetComponent<MyCharacterMovement>();
+
+        SO = featureSO as GliderFSO;
+        gliderSpeed = SO.gliderSpeed;
+        rotationRate = SO.rotationRate;
+        fallingSpeed = SO.fallingSpeed;
+
     }
 
     protected override void OnDisable()
@@ -28,7 +35,6 @@ public class GliderFeature : MyFeature
 
     protected override void OnEnable()
     {
-        name = "Glider";
         base.OnEnable();
         ActivateGlider();
     }

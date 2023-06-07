@@ -2,21 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClimbingFeature : MyFeature
+public class ClimbingF : MyFeature
 {
+    public float climbSpeed;
+
     public bool isClimbing = false;
-    public float climbSpeed = 5f;
 
     MyCharacterMovement charMov;
 
+    ClimbingFSO SO;
+    private void Awake()
+    {
+
+    }
+
+
     private void Start()
     {
+        SO = featureSO as ClimbingFSO;
+
+        climbSpeed = SO.climbSpeed;
         charMov = GetComponent<MyCharacterMovement>();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        name = "Climbing";    
+        //name = "Climbing";    
     }
 
     protected override void OnDisable()

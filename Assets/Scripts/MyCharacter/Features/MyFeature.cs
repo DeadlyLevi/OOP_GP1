@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class MyFeature : MonoBehaviour
 {
+
     [Header("Settings")]
-    public MyFeature feature;
-    public string featureName;
+    public GeneralFSO featureSO;
     public bool SetFalseWhenPicked;
-    public bool isUsed;
+
 
     protected virtual void OnEnable()
     {
-        featureName = GetType().Name;
+
     }
 
     protected virtual void OnDisable()
@@ -31,7 +31,7 @@ public class MyFeature : MonoBehaviour
         //Attach Component of type feature
         if (other.CompareTag("Player"))
         {
-            FeatureManager.Instance.AddFeature(feature);
+            FManager.Instance.AddFeature(featureSO);
 
             if (SetFalseWhenPicked)
                 gameObject.SetActive(false);
