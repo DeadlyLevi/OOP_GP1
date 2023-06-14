@@ -41,7 +41,8 @@ public class FManager : MonoBehaviour
             script.featureSO = feature;
 
             allMyF.Add(script);
-            FCanvasManager.Instance.AddFeatureInGrid(allMyF.Count - 1);
+            int id = allMyF.Count - 1;
+            FCanvasManager.Instance.AddFeatureInGrid(id, allMyF[id].featureSO.featureIcon);
             // set id/index allMyFeature.Count-1;
             if(allMyF.Count == 0)
             {
@@ -99,24 +100,24 @@ public class FManager : MonoBehaviour
 
     void UpdateFeatures()
     {
-        for(int i = 0; i <= allMyF.Count - 1; i++)
+        for(int i = 0; i <= selMyF.Count - 1; i++)
         {
             if(i == currentFeatureIndex)
             {
-                allMyF[i].enabled = true;
+                selMyF[i].enabled = true;
             }
             else
             {
-                allMyF[i].enabled = false;
+                selMyF[i].enabled = false;
             }
         }
     }
 
     public string GetSelectedFeatureName()
     {
-        if(allMyF.Count > 0)
+        if(selMyF.Count > 0)
         {
-            return allMyF[currentFeatureIndex].featureSO.featureName;
+            return selMyF[currentFeatureIndex].featureSO.featureName;
         }
         return null;
     }

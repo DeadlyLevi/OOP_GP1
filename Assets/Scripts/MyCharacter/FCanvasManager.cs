@@ -18,6 +18,7 @@ public class FCanvasManager : MonoBehaviour
     public GameObject selFGrid;
 
     public GameObject allFCanvasRef;
+    public GameObject selFTextBox;
     public LayerMask layer;
 
     bool bCanvasIsOpen;
@@ -39,12 +40,22 @@ public class FCanvasManager : MonoBehaviour
 
         if(bCanvasIsOpen)
             HandleFSelection();
+
+        if(FManager.Instance.selMyF.Count == 0)
+        {
+            selFTextBox.SetActive(false);
+        }
+        else
+        {
+            selFTextBox.SetActive(true);
+        }
     }
 
-    public void AddFeatureInGrid(int Id)
+    public void AddFeatureInGrid(int Id, Sprite Sprite)
     {
-        GameObject newSprite = Instantiate(spriteFeature, selFGrid.transform);
-        newSprite.GetComponent<spriteFeatureInfo>().id = Id;
+        GameObject newSpriteObject = Instantiate(spriteFeature, allFGrid.transform);
+        newSpriteObject.GetComponent<spriteFeatureInfo>().id = Id;
+        newSpriteObject.GetComponent<Image>().sprite = Sprite;
     }
 
     public void HandleFMenuCanvas()
