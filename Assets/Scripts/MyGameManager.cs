@@ -7,9 +7,12 @@ public class MyGameManager : MonoBehaviour
     static MyGameManager _instance;
     public static MyGameManager Instance { get { return _instance; } }
 
-
+    [HideInInspector]
     public float defaultTimeScale;
+    [HideInInspector]
     public GameObject charRef;
+
+    public int enemiesInScene = 0;
 
     void Awake()
     {
@@ -18,5 +21,10 @@ public class MyGameManager : MonoBehaviour
         {
             _instance = this;
         }
+    }
+
+    public int AssignID()
+    {
+        return enemiesInScene++;
     }
 }
